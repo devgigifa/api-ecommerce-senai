@@ -7,13 +7,13 @@ const login = async (req, res) => {
         const {email, senha} = req.body
         const listClientes = db.clientes
         if(!email || !senha){
-            res.send({erro:'email ou senha não enviado'})
+            res.status(404).send({erro:'email ou senha não enviado'})
         }
         const cliente = listClientes.find(
             (cliente) => cliente?.email == email)
         
         if(!cliente){
-            res.status(404).send({error: 'email não encontrado'})
+            res.status(406).send({error: 'email não encontrado'})
         }
 
         const senhaValida = bcrypt.compareSync(senha, cliente.senha)
@@ -30,7 +30,7 @@ const login = async (req, res) => {
         'process.env.chave_criptografia',
         { expiresIn: 1000*60*60*24*365}
 )
-        res.cookie("tokenTest", token).send({message: 'ok'})
+        res.cookie("tokenTest", token).status(200).send({message: 'ok'})
     }catch(e){
         console.log(e)
     }

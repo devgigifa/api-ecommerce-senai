@@ -12,7 +12,7 @@ const rotasAutenticacao = require('./rotas/rotaAutenticacao')
 const swaggerUi = require('swagger-ui-express')
 const YAML = require('yamljs')
 
-const swaggerDocument = YAML.load('./docs/documentacao')
+const swaggerDocument = YAML.load('./docs/documentacao.yaml')
 
 app.use(bodyParser.json())
 app.use(cookieParser())

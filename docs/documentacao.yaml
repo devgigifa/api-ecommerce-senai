@@ -1,7 +1,218 @@
 openapi: 3.0.3
+info:
+  title: API ecommerce curso backend
+  description: Esta API foi criada para validar os conhecimentos relacionados a backend, na disciplina de Codificação para Backend. Foi criada uma CRUD para uma tabela de produtos, rotas para autenticação dos clientes, validação de cookies JWT, entre outras bibliotecas como bcrypt para criptografia de senha, jest e supertest para testes automatizados, dotenv para salvar variáveis de ambiente e etc.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5500
+    description: Servidor local de testes
 
 paths:
-  /auth:
+  /auth/login:
     post:
-      sumary: Faz o login do cliente e retorna um token JWT
-  
+      summary: Faz o login do cliente e retorna um cookie JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: O email que o usuário cadastrou
+                  example: "usuario@exemplo.com"
+                senha:
+                  type: string
+                  description: Senha cadastrada
+                  example: "minhasenha123"
+              required:
+                - email
+                - senha
+      responses:
+        '200':
+          description: Login bem-sucedido, cookie JWT retornado
+        '406':
+          description: Email ou senha não enviado
+        '401':
+          description: Email ou senha inválido
+        '404': 
+          description: Cliente não encontrado
+
+  /auth/logout:
+    post:
+      summary: Faz o logout do cliente.
+      responses:
+        '200':
+          description: Logout realizado com sucesso!
+
+  /produtos:
+    get:
+      summary: Lista todos os produtos
+      description: Esta rota lista todos os produtos e retorna um array contendo os produtos.
+      responses:
+        '200':
+          description: Lista de produtos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Produto'
+        '401':
+          description: Não autorizado
+
+    post:
+      summary: Cria um novo produto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  description: Nome do produto
+                preco:
+                  type: number
+                  description: Preço do produto
+              required:
+                - nome
+                - preco
+      responses:
+        '201':
+          description: Produto criado com sucesso
+        '406':
+          description: Caso falte informação
+        '500':
+          description: Caso ocorra erro no servidor
+
+  /produtos/{id}:
+    get:
+      summary: Retorna um produto específico
+      responses:
+        '200':
+          description: Produto retornado com sucesso
+        '404':
+          description: Produto não encontrado
+
+    post:
+      summary: Atualiza um produto existente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  description: Nome do produto
+                preco:
+                  type: number
+                  description: Preço do produto
+              required:
+                - nome
+                - preco
+      responses:
+        '200':
+          description: Produto atualizado com sucesso
+        '404':
+          description: Produto não encontrado
+        '406':
+          description: Caso falte informação
+        '500':
+          description: Caso ocorra erro no servidor
+
+    delete:
+      summary: Deleta um produto existente
+      responses:
+        '204':
+          description: Produto deletado com sucesso
+        '404':
+          description: Produto não encontrado
+
+  /clientes:
+    get:
+      summary: Lista todos os clientes
+      responses:
+        '200':
+          description: Lista de clientes retornada com sucesso
+        '404':
+          description: Nenhum cliente encontrado
+
+    post:
+      summary: Cria um novo cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Email do cliente
+                senha:
+                  type: string
+                  description: Senha do cliente
+              required:
+                - email
+                - senha
+      responses:
+        '201':
+          description: Cliente criado com sucesso
+        '406':
+          description: Caso faltem informações (email e senha)
+        '500':
+          description: Caso ocorra erro no servidor
+
+  /clientes/{id}:
+    get:
+      summary: Retorna um cliente específico
+      responses:
+        '200':
+          description: Cliente retornado com sucesso
+        '404':
+          description: Cliente não encontrado
+
+    post:
+      summary: Atualiza um cliente existente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Email do cliente
+                senha:
+                  type: string
+                  description: Senha do cliente
+              required:
+                - email
+                - senha
+      responses:
+        '200':
+          description: Cliente atualizado com sucesso
+        '404':
+          description: Cliente não encontrado
+        '406':
+          description: Caso faltem informações
+        '500':
+          description: Caso ocorra erro no servidor
+
+    delete:
+      summary: Deleta um cliente existente
+      responses:
+        '204':
+          description: Cliente deletado com sucesso
+        '404':
+          description: Cliente não encontrado
