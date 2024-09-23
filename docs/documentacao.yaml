@@ -1,0 +1,7 @@
+openapi: 3.0.3
+
+paths:
+  /auth:
+    post:
+      sumary: Faz o login do cliente e retorna um token JWT
+  
